@@ -27,7 +27,6 @@ default['haproxy']['source'].tap do |source|
   source['url'] = 'http://www.haproxy.org/download'
   source['make_args'] = %w(
     TARGET=custom
-    CPU=native
     USE_LIBCRYPT=1
     USE_LINUX_SPLICE=1
     USE_LINUX_TPROXY=1

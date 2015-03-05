@@ -18,6 +18,9 @@
 
 case node['haproxy']['install_method']
 when 'package'
+  if platform_family?('rhel') && node['platform_version'].to_f >= 5.0
+    include_recipe 'yum-epel'
+  end
   package 'haproxy'
 when 'ppa'
   apt_repository 'haproxy' do
