@@ -17,7 +17,7 @@ class Chef::Resource
         :enable, :disable,
         :start, :stop, :reload
       ]
-      @action = [:create, :enable, :start,]
+      @action = [:create, :enable, :start]
     end
 
     def cookbook(arg = nil)
@@ -31,8 +31,8 @@ class Chef::Resource
     def service_provider(arg = nil)
       set_or_return(
         :service_provider, arg,
-        :kind_of => Chef::Provider::Service
-        :default => Chef::Platform.find_provider_for_node node, :service
+        :kind_of => Chef::Provider::Service,
+        :default => Chef::Platform.find_provider_for_node(node, :service)
       )
     end
   end
@@ -64,7 +64,5 @@ class Chef::Provider
       @current_resource.service_provider new_resource.service_provider
       @current_resource
     end
-
-
   end
 end
