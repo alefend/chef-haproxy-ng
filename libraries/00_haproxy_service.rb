@@ -12,8 +12,12 @@ class Chef::Resource
       @name = name
       @resource_name = :haproxy_service
       @provider = Chef::Provider::HaproxyService
-      @allowed_actions = [:create, :delete, :enable, :disable, :start, :stop]
-      @action = [:create, :enable, :start]
+      @allowed_actions = [
+        :create, :delete,
+        :enable, :disable,
+        :start, :stop, :reload
+      ]
+      @action = [:create, :enable, :start,]
     end
 
     def cookbook(arg = nil)
@@ -43,12 +47,24 @@ class Chef::Provider
   class HaproxyService < Chef::Provider
     def initialize(*args)
       super
+      @tpl = Chef::Resource::Template.new(
+        "haproxy-tpl-#{new_resource.name}",
+        run_context
+      )
+      @svc = Chef::Resource::Service.new(
+        "haproxy-svc-#{new_resource.name}",
+        run_context
+      )
     end
 
     def load_current_resource
       @current_resource ||=
         Chef::Resource::HaproxyService.new(new_resource.name)
+      @current_resource.cookbook new_resource.cookbook
+      @current_resource.service_provider new_resource.service_provider
       @current_resource
     end
+
+
   end
 end
